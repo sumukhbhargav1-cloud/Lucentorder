@@ -1,4 +1,3 @@
-import Database from "better-sqlite3";
 import path from "path";
 import { fileURLToPath } from "url";
 import { v4 as uuidv4 } from "uuid";
@@ -7,24 +6,37 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DB_FILE = process.env.DB_FILE || path.join(__dirname, "data.db");
 
 let dbInstance: any = null;
+let initialized = false;
 
 export function getDb() {
   if (!dbInstance) {
-    dbInstance = new Database(DB_FILE);
+    try {
+      // Dynamically import to avoid issues during dev server startup
+      const Database = require("better-sqlite3");
+      dbInstance = new Database(DB_FILE);
+      initialized = true;
+    } catch (err) {
+      console.error("Failed to initialize database:", err);
+      // Return a mock database for development
+      return null;
+    }
   }
   return dbInstance;
 }
 
-// Lazy get
-Object.defineProperty(globalThis, "db", {
-  get() {
-    return getDb();
-  },
-});
+export function ensureDbInitialized() {
+  const db = getDb();
+  if (!db) {
+    throw new Error("Database not initialized");
+  }
+  return db;
+}
 
-export const db = getDb() as any;
+export { getDb as db };
 
 export function initializeDatabase() {
+  const db = ensureDbInitialized();
+  
   db.exec(`
     CREATE TABLE IF NOT EXISTS menus (
       id TEXT PRIMARY KEY,
@@ -69,11 +81,11 @@ export function initializeDatabase() {
     .prepare("SELECT COUNT(*) as count FROM menus")
     .get() as any;
   if (menuCount.count === 0) {
-    seedSampleMenu();
+    seedSampleMenu(db);
   }
 }
 
-function seedSampleMenu() {
+function seedSampleMenu(db: any) {
   const items = [
     {
       item_key: "paneer_tikka",
