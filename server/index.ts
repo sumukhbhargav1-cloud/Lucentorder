@@ -25,10 +25,10 @@ export function createServer() {
   app.use(express.urlencoded({ extended: true }));
 
   // Initialize database on first request
-  app.use((req, res, next) => {
+  app.use(async (req, res, next) => {
     if (!initialized) {
       try {
-        initializeDatabase();
+        await initializeDatabase();
         initialized = true;
       } catch (err) {
         console.error("Failed to initialize database:", err);
