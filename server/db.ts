@@ -1,4 +1,3 @@
-import Database from "better-sqlite3";
 import path from "path";
 import { fileURLToPath } from "url";
 import { v4 as uuidv4 } from "uuid";
@@ -6,7 +5,25 @@ import { v4 as uuidv4 } from "uuid";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DB_FILE = process.env.DB_FILE || path.join(__dirname, "data.db");
 
-export const db = new Database(DB_FILE);
+let dbInstance: any = null;
+
+export function getDb() {
+  if (!dbInstance) {
+    // Lazy load to avoid issues with native modules during dev server startup
+    const Database = require("better-sqlite3");
+    dbInstance = new Database(DB_FILE);
+  }
+  return dbInstance;
+}
+
+export const db = new Proxy(
+  {},
+  {
+    get(_, prop) {
+      return getDb()[prop];
+    },
+  }
+) as any;
 
 export function initializeDatabase() {
   db.exec(`
