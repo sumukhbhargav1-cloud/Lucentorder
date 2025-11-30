@@ -12,6 +12,21 @@ import OrderDetail from "./pages/OrderDetail";
 import Audit from "./pages/Audit";
 import NotFound from "./pages/NotFound";
 
+// Redirect handler for GitHub Pages SPA routing
+function RedirectHandler() {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const redirect = sessionStorage.redirect;
+    if (redirect) {
+      delete sessionStorage.redirect;
+      navigate(redirect, { replace: true });
+    }
+  }, [navigate]);
+
+  return null;
+}
+
 // Protected Route Component
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated } = useAuth();
