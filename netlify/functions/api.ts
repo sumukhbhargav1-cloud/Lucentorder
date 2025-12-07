@@ -12,7 +12,7 @@ type Response = {
   headers?: Record<string, string>;
 };
 
-export async function api(event: Event): Promise<Response> {
+export const api = async (event: Event): Promise<Response> => {
   const method = event.httpMethod;
   const path = event.path || event.rawUrl || "";
 
@@ -102,4 +102,4 @@ export async function api(event: Event): Promise<Response> {
       headers: jsonHeaders,
     };
   }
-}
+};
