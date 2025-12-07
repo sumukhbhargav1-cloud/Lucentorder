@@ -1,8 +1,4 @@
-import {
-  createContext,
-  useContext,
-  ReactNode,
-} from "react";
+import { createContext, useContext, ReactNode } from "react";
 
 interface AuthContextType {
   isAuthenticated: boolean;

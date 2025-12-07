@@ -53,7 +53,10 @@ export const api = async (event: Event): Promise<Response> => {
     console.error("API Error:", error);
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: "Internal server error", details: String(error) }),
+      body: JSON.stringify({
+        error: "Internal server error",
+        details: String(error),
+      }),
       headers: jsonHeaders,
     };
   }

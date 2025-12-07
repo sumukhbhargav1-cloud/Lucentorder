@@ -48,7 +48,6 @@ export default function Layout({ children }: LayoutProps) {
               </nav>
             </div>
 
-
             {/* Mobile Menu Button */}
             <button
               className="lg:hidden"
