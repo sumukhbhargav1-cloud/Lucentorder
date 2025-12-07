@@ -34,51 +34,6 @@ export const api = async (event: Event): Promise<Response> => {
   }
 
   try {
-    // Login endpoint - no auth required
-    if (
-      path.includes("/api/login") ||
-      path.includes("/.netlify/functions/api/login")
-    ) {
-      if (method !== "POST") {
-        return {
-          statusCode: 405,
-          body: JSON.stringify({ error: "Method not allowed" }),
-          headers: jsonHeaders,
-        };
-      }
-
-      let bodyData;
-      try {
-        bodyData = event.body ? JSON.parse(event.body) : {};
-      } catch (e) {
-        return {
-          statusCode: 400,
-          body: JSON.stringify({ error: "Invalid JSON" }),
-          headers: jsonHeaders,
-        };
-      }
-
-      const { passphrase } = bodyData;
-      const ADMIN_PASSPHRASE = process.env.ADMIN_PASSPHRASE || "letmein";
-
-      console.log("Login attempt with passphrase:", passphrase);
-      console.log("Expected passphrase:", ADMIN_PASSPHRASE);
-
-      if (passphrase === ADMIN_PASSPHRASE) {
-        return {
-          statusCode: 200,
-          body: JSON.stringify({ ok: true }),
-          headers: jsonHeaders,
-        };
-      }
-
-      return {
-        statusCode: 401,
-        body: JSON.stringify({ ok: false }),
-        headers: jsonHeaders,
-      };
-    }
-
     // Health check
     if (path.includes("/api/health")) {
       return {
@@ -98,10 +53,7 @@ export const api = async (event: Event): Promise<Response> => {
     console.error("API Error:", error);
     return {
       statusCode: 500,
-      body: JSON.stringify({
-        error: "Internal server error",
-        details: String(error),
-      }),
+      body: JSON.stringify({ error: "Internal server error", details: String(error) }),
       headers: jsonHeaders,
     };
   }
