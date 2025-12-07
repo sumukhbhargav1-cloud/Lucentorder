@@ -1,8 +1,6 @@
 import { ReactNode } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { useAuth } from "../hooks/useAuth";
-import { Button } from "./ui/button";
-import { LogOut, Menu } from "lucide-react";
+import { Menu } from "lucide-react";
 import { useState } from "react";
 
 interface LayoutProps {
@@ -10,7 +8,6 @@ interface LayoutProps {
 }
 
 export default function Layout({ children }: LayoutProps) {
-  const { logout } = useAuth();
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -51,13 +48,6 @@ export default function Layout({ children }: LayoutProps) {
               </nav>
             </div>
 
-            {/* Desktop Logout */}
-            <div className="hidden lg:block">
-              <Button onClick={logout} variant="outline" size="sm">
-                <LogOut className="w-4 h-4 mr-2" />
-                Logout
-              </Button>
-            </div>
 
             {/* Mobile Menu Button */}
             <button
@@ -85,18 +75,6 @@ export default function Layout({ children }: LayoutProps) {
                   {item.label}
                 </Link>
               ))}
-              <Button
-                onClick={() => {
-                  logout();
-                  setMobileMenuOpen(false);
-                }}
-                variant="outline"
-                size="sm"
-                className="w-full"
-              >
-                <LogOut className="w-4 h-4 mr-2" />
-                Logout
-              </Button>
             </nav>
           )}
         </div>
