@@ -36,26 +36,23 @@ export function createServer() {
     next();
   });
 
-  // ========== Authentication ==========
-  app.post("/api/login", handleLogin);
-
   // ========== Menu ==========
-  app.get("/api/menu/:version", requireAuth, getMenu);
-  app.post("/api/menu/:version", requireAuth, uploadMenu);
+  app.get("/api/menu/:version", getMenu);
+  app.post("/api/menu/:version", uploadMenu);
 
   // ========== Orders ==========
-  app.post("/api/orders", requireAuth, createOrder);
-  app.get("/api/orders", requireAuth, listOrders);
-  app.get("/api/orders/:id", requireAuth, getOrder);
-  app.post("/api/orders/:id/items", requireAuth, addItemsToOrder);
-  app.put("/api/orders/:id", requireAuth, updateOrder);
+  app.post("/api/orders", createOrder);
+  app.get("/api/orders", listOrders);
+  app.get("/api/orders/:id", getOrder);
+  app.post("/api/orders/:id/items", addItemsToOrder);
+  app.put("/api/orders/:id", updateOrder);
 
   // ========== WhatsApp & Print ==========
-  app.post("/api/orders/:id/send-whatsapp", requireAuth, sendWhatsAppToKitchen);
-  app.get("/api/orders/:id/print", requireAuth, printBill);
+  app.post("/api/orders/:id/send-whatsapp", sendWhatsAppToKitchen);
+  app.get("/api/orders/:id/print", printBill);
 
   // ========== Export ==========
-  app.get("/api/export/csv", requireAuth, exportCSV);
+  app.get("/api/export/csv", exportCSV);
 
   // ========== Health Check ==========
   app.get("/api/health", (_req, res) => res.json({ ok: true }));
